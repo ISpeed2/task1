@@ -1,33 +1,27 @@
-﻿#ifndef STORE_H
+#ifndef STORE_H
 #define STORE_H
 
-#include <iostream>
 #include <string>
 #include <map>
-#include "Product.h" // Подключаем Product.h
+#include "StockItem.h" // Включаем StockItem!
 
 class Store {
 private:
     std::string name;
     int id;
     std::string address;
-    std::map<int, std::pair<Product, int>> inventory;
+    std::map<int, StockItem> inventory; // Используем StockItem!
 
 public:
-    Store(std::string name, std::string address, int id);
-
+    Store(std::string name, int id, std::string address);
     std::string get_name() const;
     int get_id() const;
     std::string get_address() const;
 
-    void add_product(const Product& product, int quantity);
-    void remove_product(int product_id, int quantity);
-    double get_product_price(int product_id) const;
-    int get_product_quantity(int product_id) const;
-    void sell_product(int product_id, int quantity);
+    std::map<int, StockItem>& get_inventory(); // Возвращаем ссылку!
 
-    void print_inventory() const;
-    Product getProduct(int product_id) const;
+    void add_product(int product_id, const Product& product, int quantity);
+    void remove_product(int product_id);
 };
 
 #endif
