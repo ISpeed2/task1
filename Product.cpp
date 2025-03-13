@@ -1,7 +1,21 @@
-﻿#include "Product.h"
+#include "Product.h"
+#include <stdexcept>  // Для исключений
 
 Product::Product(std::string name, std::string description, int id, double price) :
-    name(name), description(description), id(id), price(price) {}
+    name(name), description(description), id(id), price(price) {
+    if (name.empty()) {
+        throw std::invalid_argument("Название товара не может быть пустым.");
+    }
+    if (description.empty()) {
+         throw std::invalid_argument("Описание товара не может быть пустым.");
+    }
+    if (id <= 0) {
+        throw std::invalid_argument("ID товара должен быть положительным числом.");
+    }
+    if (price < 0) {
+        throw std::invalid_argument("Цена товара не может быть отрицательной.");
+    }
+}
 
 std::string Product::get_name() const {
     return name;
@@ -20,6 +34,9 @@ double Product::get_price() const {
 }
 
 void Product::set_price(double price) {
+    if (price < 0) {
+        throw std::invalid_argument("Цена товара не может быть отрицательной.");
+    }
     this->price = price;
 }
 
