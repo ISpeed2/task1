@@ -15,54 +15,68 @@ void ShopManagementSystem::remove_store(int store_id) {
 Store* ShopManagementSystem::get_store(int store_id) {
     for (auto& store : stores) {
         if (store.get_id() == store_id) {
-            return &store; // Возвращаем указатель на найденный магазин
+            return &store;
         }
     }
-    return nullptr; // Магазин не найден
+    return nullptr;
 }
 
 std::vector<Store> ShopManagementSystem::get_all_stores() const {
     return stores;
 }
 
+Store* ShopManagementSystem::find_store_with_lowest_price(int product_id) {
+    Store* cheapest_store = nullptr;
+    double lowest_price = -1.0;
+
+    for (auto& store : stores) {
+        std::map<int, StockItem>& inventory = store.get_inventory();
+        auto it = inventory.find(product_id);
+        if (it != inventory.end()) {
+            Product product = it->second.get_product();
+            double price = product.get_price();
+
+            if (cheapest_store == nullptr || price < lowest_price) {
+                cheapest_store = &store;
+                lowest_price = price;
+            }
+        }
+    }
+
+    return cheapest_store;
+}
+
 void ShopManagementSystem::run_simulation() {
     std::cout << "Запуск симуляции работы магазинов..." << std::endl;
 
-    // Создаем генератор случайных чисел
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    // Проходим по всем магазинам и имитируем продажи
     for (auto& store : stores) {
         std::cout << "Симуляция для магазина \"" << store.get_name() << "\":" << std::endl;
 
-        // Получаем inventory магазина
-        std::map<int, std::pair<Product, int>>& inventory = store.get_inventory();
+        std::map<int, StockItem>& inventory = store.get_inventory();
 
-        // Если inventory пустой, пропускаем магазин
         if (inventory.empty()) {
             std::cout << "  В магазине нет товаров." << std::endl;
             continue;
         }
 
-        // Имитируем несколько покупок (например, 5)
         for (int i = 0; i < 5; ++i) {
-            // Выбираем случайный товар из inventory
             std::uniform_int_distribution<> distrib(0, inventory.size() - 1);
             int random_index = distrib(gen);
 
-            // Получаем итератор на случайный элемент
             auto it = inventory.begin();
             std::advance(it, random_index);
 
             int product_id = it->first;
-            Product product = it->second.first;
-            int available_quantity = it->second.second;
+            StockItem& item = it->second;
+            Product product = item.get_product();
+            int available_quantity = item.get_quantity();
 
-            // Имитируем покупку 1 единицы товара (если он есть в наличии)
             if (available_quantity > 0) {
                 std::cout << "  Покупка: " << product.get_name() << std::endl;
-                inventory[product_id].second--; // Уменьшаем количество товара в inventory
+                item.set_quantity(available_quantity - 1); // Correctly update quantity
             } else {
                 std::cout << "  Попытка покупки: " << product.get_name() << " (нет в наличии)" << std::endl;
             }
