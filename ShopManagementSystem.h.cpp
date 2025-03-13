@@ -1,24 +1,24 @@
-﻿#ifndef SHOPMANAGEMENTSYSTEM_H
+#ifndef SHOPMANAGEMENTSYSTEM_H
 #define SHOPMANAGEMENTSYSTEM_H
 
 #include <vector>
-#include "Store.h"
-#include "Product.h"
-#include "Customer.h"
+#include "Store.h" // Убедитесь, что путь к файлу Store.h правильный
 
 class ShopManagementSystem {
 private:
     std::vector<Store> stores;
-    std::vector<Product> products;
-    std::vector<Customer> customers;
 
 public:
-    void add_store(const Store& store);
-    void add_product(const Product& product);
-    void add_customer(const Customer& customer);
-    Store* find_store_with_lowest_price(int product_id);
+    ShopManagementSystem() = default; // Конструктор по умолчанию
 
-    void run_simulation(); // Optional: for demonstration purposes
+    // Методы для управления магазинами
+    void add_store(const Store& store);
+    void remove_store(int store_id);
+    Store* get_store(int store_id); // Возвращает указатель на магазин
+    std::vector<Store> get_all_stores() const;
+
+    // Симуляция
+    void run_simulation();
 };
 
 #endif
