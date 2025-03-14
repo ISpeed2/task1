@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "StockItem.h"
+#include "Product.h"
 
 class Store {
 private:
@@ -18,7 +19,7 @@ public:
     std::string get_name() const;
     int get_id() const;
     std::string get_address() const;
-    std::map<int, StockItem>& get_inventory(); // Возвращаем ссылку!
+    std::map<int, StockItem>& get_inventory();
 
     void add_product(int product_id, const Product& product, int quantity);
     void remove_product(int product_id);
