@@ -27,7 +27,7 @@ std::vector<Store> ShopManagementSystem::get_all_stores() const {
 
 Store* ShopManagementSystem::find_store_with_lowest_price(int product_id) {
     Store* cheapest_store = nullptr;
-    double lowest_price = -1.0;
+    double lowest_price; // Не инициализируем!
 
     for (auto& store : stores) {
         std::map<int, StockItem>& inventory = store.get_inventory();
@@ -36,7 +36,12 @@ Store* ShopManagementSystem::find_store_with_lowest_price(int product_id) {
             Product product = it->second.get_product();
             double price = product.get_price();
 
-            if (cheapest_store == nullptr || price < lowest_price) {
+            if (cheapest_store == nullptr) {
+                // Это первый найденный магазин с товаром
+                cheapest_store = &store;
+                lowest_price = price;
+            } else if (price < lowest_price) {
+                // Нашли магазин с более низкой ценой
                 cheapest_store = &store;
                 lowest_price = price;
             }
